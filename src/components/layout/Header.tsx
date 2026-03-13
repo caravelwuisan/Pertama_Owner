@@ -26,8 +26,8 @@ export const Header: React.FC<HeaderProps> = ({ profile, toggleSidebar }) => {
         <div className="header-breadcrumbs">
           {profile?.role === 'owner' ? (
             <div>
-              <h2 className="header-project-name">My Properties</h2>
-              <p className="header-project-location">Pertama Owner Dashboard</p>
+              <h2 className="header-project-name">Pertama Property Developement</h2>
+              <p className="header-project-location">Owner Dashboard</p>
             </div>
           ) : (
             <div>
