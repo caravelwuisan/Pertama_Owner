@@ -1,29 +1,30 @@
 :root {
   --font-primary: 'Inter', system-ui, -apple-system, sans-serif;
   
-  /* Color Palette - Minimalist Light Theme */
-  --bg-main: #FAFAFA;
-  --bg-surface: #FFFFFF;
-  --bg-surface-hover: #F3F4F6;
+  /* Color Palette - V5 Dark Theme */
+  --bg-main: #0B1220;
+  --bg-surface: #18233B;
+  --bg-header: #111C34;
+  --bg-surface-hover: rgba(255, 255, 255, 0.05);
   
-  --text-primary: #111827;
-  --text-secondary: #4B5563;
-  --text-tertiary: #9CA3AF;
+  --text-primary: #FFFFFF;
+  --text-secondary: #9AA4B2;
+  --text-tertiary: #6b7280;
   
-  /* Sleek accent color (black/dark gray for minimalist luxury) */
-  --accent-gold: #000000;
-  --accent-gold-hover: #374151;
-  --accent-gold-light: rgba(0, 0, 0, 0.04);
+  /* Sleek accent color */
+  --accent-gold: #1F6F6B;
+  --accent-gold-hover: #2FA4A0;
+  --accent-gold-light: rgba(31, 111, 107, 0.1);
   
-  --border-light: #E5E7EB;
-  --border-medium: #D1D5DB;
-  --border-focus: #111827;
+  --border-light: rgba(255, 255, 255, 0.08);
+  --border-medium: rgba(255, 255, 255, 0.15);
+  --border-focus: #1F6F6B;
   
-  /* Status Colors (Light Theme adjusted) */
-  --status-success: #059669;
-  --status-success-bg: #d1fae5;
-  --status-warning: #d97706;
-  --status-warning-bg: #fef3c7;
+  /* Status Colors */
+  --status-success: #2FA4A0;
+  --status-success-bg: rgba(47, 164, 160, 0.15);
+  --status-warning: #E05555;
+  --status-warning-bg: rgba(224, 85, 85, 0.15);
   
   /* Shadows */
   --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.04);
@@ -126,12 +127,12 @@ h4 { font-size: 1.25rem; }
 }
 
 .btn-primary {
-  background-color: var(--text-primary);
+  background-color: var(--accent-gold);
   color: #ffffff;
 }
 
 .btn-primary:hover {
-  background-color: #000000;
+  background-color: var(--accent-gold-hover);
   box-shadow: var(--shadow-md);
 }
 

@@ -35,7 +35,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ role, isExpanded, isMobile, is
     <aside className={`sidebar ${isExpanded ? 'expanded' : 'collapsed'} ${isMobile ? 'mobile-mode' : ''} ${isMobileOpen ? 'open' : ''}`}>
       <div className="sidebar-header">
         <div className="sidebar-logo flex items-center gap-3">
-          <div className="logo-icon">P</div>
+          <img src="/logo.png" alt="Pertama Property" className="logo-image" />
           {isExpanded && (
             <div className="logo-text fade-in">
               <span className="logo-title">Pertama</span>
