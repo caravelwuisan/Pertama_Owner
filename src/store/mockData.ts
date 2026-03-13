@@ -75,7 +75,7 @@ export const mockUpdates: DailyUpdate[] = [
     id: 'u1', projectId: 'p1', date: '2024-02-28T09:00:00Z',
     text: 'Concrete poured for the pool structure. Weather conditions were optimal today. Curing process has started.',
     author: 'Pak Wayan (Site Manager)',
-    photos: ['https://images.unsplash.com/photo-1541888086425-d81bb19240f5?auto=format&fit=crop&q=80']
+    photos: ['/latest_setup.jpg']
   },
   {
     id: 'u2', projectId: 'p1', date: '2024-02-27T14:30:00Z',
