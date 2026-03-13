@@ -1,6 +1,6 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
-import { LayoutDashboard, Camera, Clock, Activity, FileText, Users, FolderOpen, MessageSquare, ChevronLeft, ChevronRight, X } from 'lucide-react';
+import { LayoutDashboard, Camera, Clock, Activity, FileText, Users, FolderOpen, MessageSquare, ChevronLeft, ChevronRight, X, CreditCard } from 'lucide-react';
 import './Sidebar.css';
 
 interface SidebarProps {
@@ -17,6 +17,7 @@ const ownerLinks = [
   { path: '/timeline', label: 'Timeline', icon: Clock },
   { path: '/updates', label: 'Daily Updates', icon: Activity },
   { path: '/invoices', label: 'Invoices', icon: FileText },
+  { path: '/ipdc', label: 'IPDC', icon: CreditCard },
 ];
 
 const adminLinks = [

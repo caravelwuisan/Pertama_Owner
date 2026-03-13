@@ -11,6 +11,7 @@ import { Cameras as OwnerCameras } from './pages/owner/Cameras';
 import { Timeline as OwnerTimeline } from './pages/owner/Timeline';
 import { Updates as OwnerUpdates } from './pages/owner/Updates';
 import { Invoices as OwnerInvoices } from './pages/owner/Invoices';
+import { IPDC as OwnerIPDC } from './pages/owner/IPDC';
 
 // Placeholder Pages (Admin)
 import { AdminDashboard } from './pages/admin/AdminDashboard';
@@ -70,6 +71,7 @@ function AppRoutes() {
         <Route path="timeline" element={<OwnerTimeline />} />
         <Route path="updates" element={<OwnerUpdates />} />
         <Route path="invoices" element={<OwnerInvoices />} />
+        <Route path="ipdc" element={<OwnerIPDC />} />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Route>
     </Routes>

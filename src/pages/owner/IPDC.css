@@ -1,0 +1,162 @@
+.ipdc-page {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+}
+
+.ipdc-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+  align-items: start;
+}
+
+.ipdc-section {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.section-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 24px;
+}
+
+.installments-list, .proofs-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* Installment Cards */
+.installment-item {
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+  border-radius: 12px;
+  border: 1px solid var(--border-light);
+  background-color: var(--bg-main);
+  transition: all var(--transition-fast);
+}
+
+.installment-item.highlight {
+  border-color: var(--status-warning);
+  background-color: var(--status-warning-bg);
+}
+
+.installment-info h4 {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 4px;
+}
+
+.due-date {
+  font-size: 0.8125rem;
+  color: var(--text-secondary);
+}
+
+.installment-amount-block {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  margin-top: 16px;
+  border-top: 1px solid var(--border-light);
+  padding-top: 16px;
+}
+
+.installment-amount {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  letter-spacing: -0.02em;
+}
+
+.status-label {
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: var(--text-tertiary);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+/* Proof Items */
+.proof-item {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 16px;
+  border-radius: 12px;
+  border: 1px solid var(--border-light);
+  background-color: var(--bg-main);
+  transition: all var(--transition-fast);
+}
+
+.proof-item:hover {
+  background-color: var(--bg-surface-hover);
+  border-color: var(--border-medium);
+}
+
+.proof-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 8px;
+  background-color: var(--bg-surface);
+  border: 1px solid var(--border-light);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.proof-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.proof-info h4 {
+  font-size: 0.9375rem;
+  font-weight: 500;
+  color: var(--text-primary);
+  margin: 0;
+}
+
+.proof-meta {
+  font-size: 0.8125rem;
+  color: var(--text-secondary);
+  margin: 0;
+}
+
+.proof-actions {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 8px;
+}
+
+/* Mobile Responsiveness */
+@media (max-width: 1024px) {
+  .ipdc-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 480px) {
+  .proof-item {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+  
+  .proof-actions {
+    flex-direction: row;
+    width: 100%;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 8px;
+  }
+}
