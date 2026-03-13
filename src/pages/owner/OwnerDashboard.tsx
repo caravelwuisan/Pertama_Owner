@@ -1,15 +1,17 @@
 import { mockProject, mockUpdates, mockInvoices } from '../../store/mockData';
 import { Activity, Clock, FileText, CheckCircle2, AlertCircle } from 'lucide-react';
+import { useAuth } from '../../contexts/AuthContext';
 import './OwnerDashboard.css';
 
 export const OwnerDashboard = () => {
+  const { profile } = useAuth();
   const latestUpdate = mockUpdates[0];
   const pendingInvoice = mockInvoices.find(i => i.status === 'Pending');
 
   return (
     <div className="dashboard-container animate-fade-in">
       <div className="dashboard-header">
-        <h1 className="dashboard-title">Welcome back, John!</h1>
+        <h1 className="dashboard-title">Welcome back, {profile?.full_name?.split(' ')[0] || 'Owner'}!</h1>
         <p className="dashboard-subtitle">Here is the latest progress on your property.</p>
       </div>
 
@@ -31,7 +33,7 @@ export const OwnerDashboard = () => {
             ></div>
           </div>
           <div className="next-milestone">
-            <Clock size={16} className="text-gold" />
+            <Clock size={16} className="text-secondary" />
             <span>Next: <strong>{mockProject.nextMilestone}</strong></span>
           </div>
         </div>

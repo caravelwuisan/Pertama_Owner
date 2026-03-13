@@ -1,22 +1,22 @@
 import React from 'react';
 import { Bell, Search, User as UserIcon, LogOut } from 'lucide-react';
-import type { User, Project } from '../../types';
+import { useAuth } from '../../contexts/AuthContext';
 import './Header.css';
 
 interface HeaderProps {
-  user: User;
-  project?: Project;
-  onToggleRole: () => void;
+  profile: any;
 }
 
-export const Header: React.FC<HeaderProps> = ({ user, project, onToggleRole }) => {
+export const Header: React.FC<HeaderProps> = ({ profile }) => {
+  const { signOut } = useAuth();
+
   return (
     <header className="header">
       <div className="header-breadcrumbs">
-        {user.role === 'owner' && project ? (
+        {profile?.role === 'owner' ? (
           <div>
-            <h2 className="header-project-name">{project.name}</h2>
-            <p className="header-project-location">{project.address}</p>
+            <h2 className="header-project-name">My Properties</h2>
+            <p className="header-project-location">Pertama Owner Dashboard</p>
           </div>
         ) : (
           <div>
@@ -28,33 +28,32 @@ export const Header: React.FC<HeaderProps> = ({ user, project, onToggleRole }) =
 
       <div className="header-actions">
         <div className="header-search">
-          <Search size={18} className="search-icon" />
+          <Search size={16} className="search-icon" />
           <input type="text" placeholder="Search..." className="search-input" />
         </div>
 
         <button className="icon-btn" aria-label="Notifications">
-          <Bell size={20} />
+          <Bell size={18} />
           <span className="notification-dot"></span>
         </button>
 
         <div className="header-profile">
           <div className="profile-info">
-            <span className="profile-name">{user.name}</span>
-            <span className="profile-role">{user.role === 'admin' ? 'Administrator' : 'Property Owner'}</span>
+            <span className="profile-name">{profile?.full_name || 'User'}</span>
+            <span className="profile-role">{profile?.role === 'admin' ? 'Administrator' : 'Property Owner'}</span>
           </div>
           <div className="profile-avatar">
-            <UserIcon size={20} />
+            <UserIcon size={18} />
           </div>
         </div>
 
-        {/* Demo Switcher */}
         <button 
           className="demo-switch-btn" 
-          onClick={onToggleRole}
-          title={`Switch to ${user.role === 'admin' ? 'Owner' : 'Admin'} view`}
+          onClick={signOut}
+          title="Sign Out"
         >
           <LogOut size={16} />
-          <span>Switch Role</span>
+          <span>Sign Out</span>
         </button>
       </div>
     </header>
