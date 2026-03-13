@@ -49,7 +49,7 @@ const ProtectedRoute = ({ allowedRoles }: { allowedRoles?: ('admin' | 'owner')[]
 };
 
 function AppRoutes() {
-  const { role, loading } = useAuth();
+  const { loading } = useAuth();
 
   if (loading) return null;
 
