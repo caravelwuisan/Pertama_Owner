@@ -1,0 +1,118 @@
+.timeline-page {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+}
+
+.timeline-container {
+  display: flex;
+  flex-direction: column;
+  padding-top: 16px;
+}
+
+.timeline-item {
+  display: flex;
+  gap: 24px;
+  position: relative;
+  opacity: 0.6;
+  transition: opacity var(--transition-normal);
+}
+
+.timeline-item.completed,
+.timeline-item.in-progress {
+  opacity: 1;
+}
+
+.timeline-indicator {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+  z-index: 2;
+}
+
+.indicator-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background-color: var(--bg-surface);
+  border: 2px solid var(--border-light);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-tertiary);
+  transition: all var(--transition-normal);
+}
+
+.timeline-item.completed .indicator-icon {
+  background-color: var(--status-success-bg);
+  border-color: var(--status-success);
+  color: var(--status-success);
+}
+
+.timeline-item.in-progress .indicator-icon {
+  background-color: var(--accent-gold-light);
+  border-color: var(--accent-gold);
+  color: var(--accent-gold);
+  box-shadow: var(--shadow-gold);
+}
+
+.timeline-line {
+  width: 2px;
+  flex: 1;
+  background-color: var(--border-light);
+  margin: 12px 0;
+  min-height: 40px;
+}
+
+.timeline-item.completed .timeline-line {
+  background-color: var(--status-success);
+}
+
+.timeline-content {
+  flex: 1;
+  margin-bottom: 32px;
+  padding: 24px;
+}
+
+.timeline-item:last-child .timeline-content {
+  margin-bottom: 0;
+}
+
+.timeline-header {
+  margin-bottom: 12px;
+}
+
+.timeline-title {
+  font-size: 1.25rem;
+  margin: 0;
+  color: var(--text-primary);
+}
+
+.timeline-date {
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+  background-color: rgba(255, 255, 255, 0.05);
+  padding: 4px 12px;
+  border-radius: 12px;
+}
+
+.timeline-desc {
+  color: var(--text-secondary);
+  line-height: 1.6;
+}
+
+.mt-4 {
+  margin-top: 16px;
+}
+
+.mb-1 {
+  margin-bottom: 4px;
+}
+
+.progress-bar-container-small {
+  height: 6px;
+  background-color: var(--border-light);
+  border-radius: 3px;
+  overflow: hidden;
+}

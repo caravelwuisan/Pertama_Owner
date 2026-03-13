@@ -1,0 +1,6 @@
+﻿src/store/mockData.ts(1,10): error TS1484: 'User' is a type and must be imported using a type-only import when 'verbatimModuleSyntax' is enabled.
+src/store/mockData.ts(1,16): error TS1484: 'Project' is a type and must be imported using a type-only import when 'verbatimModuleSyntax' is enabled.
+src/store/mockData.ts(1,25): error TS1484: 'Camera' is a type and must be imported using a type-only import when 'verbatimModuleSyntax' is enabled.
+src/store/mockData.ts(1,33): error TS1484: 'Invoice' is a type and must be imported using a type-only import when 'verbatimModuleSyntax' is enabled.
+src/store/mockData.ts(1,42): error TS1484: 'TimelineMilestone' is a type and must be imported using a type-only import when 'verbatimModuleSyntax' is enabled.
+src/store/mockData.ts(1,61): error TS1484: 'DailyUpdate' is a type and must be imported using a type-only import when 'verbatimModuleSyntax' is enabled.
