@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route, Navigate, Outlet } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { Layout } from './components/layout/Layout';
 import { AuthProvider, useAuth } from './contexts/AuthContext';
 
@@ -41,11 +41,7 @@ const ProtectedRoute = ({ allowedRoles }: { allowedRoles?: ('admin' | 'owner')[]
 
   // Need to pass user/role context to Layout, Layout currently expects static user object.
   // We'll update the dummy Layout slightly later or adapt it here.
-  return (
-    <Layout>
-      <Outlet />
-    </Layout>
-  );
+  return <Layout />;
 };
 
 function AppRoutes() {

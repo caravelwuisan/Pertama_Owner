@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { NavLink } from 'react-router-dom';
-import { LayoutDashboard, Camera, Clock, Activity, FileText, Users, FolderOpen, Menu, MessageSquare, ChevronLeft, ChevronRight } from 'lucide-react';
+import { LayoutDashboard, Camera, Clock, Activity, FileText, Users, FolderOpen, MessageSquare, ChevronLeft, ChevronRight } from 'lucide-react';
 import './Sidebar.css';
 
 interface SidebarProps {
