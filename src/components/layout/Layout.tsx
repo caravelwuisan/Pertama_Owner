@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Outlet } from 'react-router-dom';
+import { Outlet, useLocation } from 'react-router-dom';
 import { Sidebar } from './Sidebar';
 import { Header } from './Header';
 import './Layout.css';
@@ -8,14 +8,21 @@ import { useAuth } from '../../contexts/AuthContext';
 export const Layout: React.FC = () => {
   const { user, profile } = useAuth();
   const [isSidebarExpanded, setIsSidebarExpanded] = useState(true);
+  const [isMobileOpen, setIsMobileOpen] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
+  const location = useLocation();
 
-  // Auto collapse on smaller screens
   useEffect(() => {
     const handleResize = () => {
-      if (window.innerWidth < 1024) {
+      const width = window.innerWidth;
+      setIsMobile(width < 768);
+      
+      if (width < 1024 && width >= 768) {
         setIsSidebarExpanded(false);
-      } else {
+        setIsMobileOpen(false);
+      } else if (width >= 1024) {
         setIsSidebarExpanded(true);
+        setIsMobileOpen(false);
       }
     };
 
@@ -25,17 +32,38 @@ export const Layout: React.FC = () => {
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
+  // Auto-close mobile sidebar when navigating
+  useEffect(() => {
+    setIsMobileOpen(false);
+  }, [location.pathname]);
+
   if (!user || !profile) return null;
 
   const toggleSidebar = () => {
-    setIsSidebarExpanded(!isSidebarExpanded);
+    if (isMobile) {
+      setIsMobileOpen(!isMobileOpen);
+    } else {
+      setIsSidebarExpanded(!isSidebarExpanded);
+    }
   };
 
   return (
-    <div className={`layout-container ${isSidebarExpanded ? 'sidebar-expanded' : 'sidebar-collapsed'}`}>
-      <Sidebar role={profile.role} isExpanded={isSidebarExpanded} toggleSidebar={toggleSidebar} />
+    <div className={`layout-container ${!isMobile ? (isSidebarExpanded ? 'sidebar-expanded' : 'sidebar-collapsed') : 'mobile-layout'}`}>
+      <Sidebar 
+        role={profile.role} 
+        isExpanded={isMobile ? true : isSidebarExpanded} 
+        isMobile={isMobile}
+        isMobileOpen={isMobileOpen}
+        toggleSidebar={toggleSidebar} 
+      />
+      
+      {/* Mobile backdrop for off-canvas menu */}
+      {isMobile && isMobileOpen && (
+        <div className="mobile-sidebar-backdrop fade-in" onClick={() => setIsMobileOpen(false)}></div>
+      )}
+
       <div className="layout-content">
-        <Header profile={profile} />
+        <Header profile={profile} toggleSidebar={toggleSidebar} />
         <main className="main-content fade-in">
           <Outlet />
         </main>

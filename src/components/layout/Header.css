@@ -12,6 +12,25 @@
   z-index: 5;
 }
 
+.header-left {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.mobile-menu-btn {
+  display: none;
+  background: transparent;
+  border: 1px solid var(--border-light);
+  border-radius: 8px;
+  color: var(--text-primary);
+  width: 40px;
+  height: 40px;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
 .header-breadcrumbs {
   display: flex;
   flex-direction: column;
@@ -153,4 +172,27 @@
   background-color: var(--bg-surface-hover);
   color: var(--text-primary);
   border-color: var(--border-medium);
+}
+
+/* Mobile Responsiveness */
+@media (max-width: 768px) {
+  .header {
+    padding: 0 16px;
+  }
+  
+  .mobile-menu-btn {
+    display: flex;
+  }
+
+  .hidden-mobile {
+    display: none !important;
+  }
+
+  .header-actions {
+    gap: 12px;
+  }
+
+  .header-project-name {
+    font-size: 1rem;
+  }
 }

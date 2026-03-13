@@ -198,3 +198,14 @@ h4 { font-size: 1.25rem; }
 ::-webkit-scrollbar-thumb:hover {
   background: var(--text-tertiary);
 }
+
+/* Mobile global overrides */
+@media (max-width: 768px) {
+  .card {
+    padding: 1rem;
+  }
+  
+  h1 { font-size: 2rem; }
+  h2 { font-size: 1.5rem; }
+  h3 { font-size: 1.25rem; }
+}

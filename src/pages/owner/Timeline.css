@@ -119,3 +119,20 @@
   border-radius: 3px;
   overflow: hidden;
 }
+
+/* Mobile Overrides */
+@media (max-width: 768px) {
+  .timeline-item {
+    gap: 16px;
+  }
+  
+  .timeline-content {
+    padding: 16px;
+    margin-bottom: 24px;
+  }
+  
+  .indicator-icon {
+    width: 36px;
+    height: 36px;
+  }
+}
