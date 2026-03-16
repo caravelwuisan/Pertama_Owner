@@ -8,16 +8,17 @@ import { Login } from './pages/Login';
 // Owner Pages
 import { OwnerDashboard } from './pages/owner/OwnerDashboard';
 import { Cameras as OwnerCameras } from './pages/owner/Cameras';
-import { Timeline as OwnerTimeline } from './pages/owner/Timeline';
+
 import { Updates as OwnerUpdates } from './pages/owner/Updates';
 import { Invoices as OwnerInvoices } from './pages/owner/Invoices';
 import { IPDC as OwnerIPDC } from './pages/owner/IPDC';
 
-// Placeholder Pages (Admin)
 import { AdminDashboard } from './pages/admin/AdminDashboard';
-const AdminProjects = () => <div className="p-8 text-center text-secondary">Projects & Owners Management - Coming Soon</div>;
+import { AdminOwners } from './pages/admin/AdminOwners';
+import { AdminProjects } from './pages/admin/AdminProjects';
+import { AdminUpdates } from './pages/admin/AdminUpdates';
+import { AdminInvoices } from './pages/admin/AdminInvoices';
 const AdminCameras = () => <div className="p-8 text-center text-secondary">Camera Management - Coming Soon</div>;
-const AdminInvoices = () => <div className="p-8 text-center text-secondary">Invoice Management - Coming Soon</div>;
 
 const ProtectedRoute = ({ allowedRoles }: { allowedRoles?: ('admin' | 'owner')[] }) => {
   const { user, role, loading } = useAuth();
@@ -58,7 +59,8 @@ function AppRoutes() {
       <Route path="/admin" element={<ProtectedRoute allowedRoles={['admin']} />}>
         <Route index element={<AdminDashboard />} />
         <Route path="projects" element={<AdminProjects />} />
-        <Route path="owners" element={<AdminProjects />} />
+        <Route path="owners" element={<AdminOwners />} />
+        <Route path="updates" element={<AdminUpdates />} />
         <Route path="cameras" element={<AdminCameras />} />
         <Route path="invoices" element={<AdminInvoices />} />
         <Route path="*" element={<Navigate to="/admin" replace />} />
@@ -68,7 +70,7 @@ function AppRoutes() {
       <Route path="/" element={<ProtectedRoute allowedRoles={['owner']} />}>
         <Route index element={<OwnerDashboard />} />
         <Route path="cameras" element={<OwnerCameras />} />
-        <Route path="timeline" element={<OwnerTimeline />} />
+
         <Route path="updates" element={<OwnerUpdates />} />
         <Route path="invoices" element={<OwnerInvoices />} />
         <Route path="ipdc" element={<OwnerIPDC />} />

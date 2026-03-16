@@ -1,6 +1,6 @@
-import React from 'react';
-import { NavLink } from 'react-router-dom';
-import { LayoutDashboard, Camera, Clock, Activity, FileText, Users, FolderOpen, MessageSquare, ChevronLeft, ChevronRight, X, CreditCard } from 'lucide-react';
+import React, { useState } from 'react';
+import { NavLink, useLocation } from 'react-router-dom';
+import { LayoutDashboard, Camera, Clock, Activity, FileText, Users, FolderOpen, MessageSquare, ChevronLeft, ChevronRight, X, CreditCard, ChevronDown, ChevronUp } from 'lucide-react';
 import './Sidebar.css';
 
 interface SidebarProps {
@@ -11,7 +11,14 @@ interface SidebarProps {
   toggleSidebar: () => void;
 }
 
-const ownerLinks = [
+type NavLinkItem = {
+  path: string;
+  label: string;
+  icon: React.ElementType;
+  sublinks?: { path: string; label: string; icon: React.ElementType }[];
+};
+
+const ownerLinks: NavLinkItem[] = [
   { path: '/', label: 'Dashboard', icon: LayoutDashboard },
   { path: '/cameras', label: 'Cameras', icon: Camera },
   { path: '/timeline', label: 'Timeline', icon: Clock },
@@ -20,16 +27,36 @@ const ownerLinks = [
   { path: '/ipdc', label: 'IPDC', icon: CreditCard },
 ];
 
-const adminLinks = [
+const adminLinks: NavLinkItem[] = [
   { path: '/admin', label: 'Dashboard Overview', icon: LayoutDashboard },
-  { path: '/admin/projects', label: 'Projects', icon: FolderOpen },
+  { 
+    path: '/admin/projects', 
+    label: 'Projects', 
+    icon: FolderOpen,
+    sublinks: [
+      { path: '/admin/projects', label: 'Manage Projects', icon: FolderOpen },
+      { path: '/admin/cameras', label: 'Cameras', icon: Camera },
+      { path: '/admin/invoices', label: 'Invoices', icon: FileText },
+      { path: '/admin/updates', label: 'Updates', icon: Activity },
+    ]
+  },
   { path: '/admin/owners', label: 'Owners', icon: Users },
-  { path: '/admin/cameras', label: 'Cameras', icon: Camera },
-  { path: '/admin/invoices', label: 'Invoices', icon: FileText },
 ];
 
 export const Sidebar: React.FC<SidebarProps> = ({ role, isExpanded, isMobile, isMobileOpen, toggleSidebar }) => {
   const links = role === 'admin' ? adminLinks : ownerLinks;
+  const location = useLocation();
+  const [expandedMenu, setExpandedMenu] = useState<string | null>('/admin/projects'); // default open for admin projects or null
+
+  const toggleSubmenu = (path: string, e: React.MouseEvent) => {
+    e.preventDefault();
+    if (!isExpanded && !isMobile) {
+      toggleSidebar(); // Expand sidebar if trying to open a menu while collapsed
+      setExpandedMenu(path);
+    } else {
+      setExpandedMenu(expandedMenu === path ? null : path);
+    }
+  };
 
   return (
     <aside className={`sidebar ${isExpanded ? 'expanded' : 'collapsed'} ${isMobile ? 'mobile-mode' : ''} ${isMobileOpen ? 'open' : ''}`}>
@@ -58,17 +85,62 @@ export const Sidebar: React.FC<SidebarProps> = ({ role, isExpanded, isMobile, is
       <nav className="sidebar-nav">
         {links.map((link) => {
           const Icon = link.icon;
+          const hasSublinks = !!link.sublinks;
+          const isSubmenuOpen = expandedMenu === link.path;
+          
+          // Check if any sublink is active
+          const isChildActive = hasSublinks && link.sublinks!.some(sub => location.pathname === sub.path || location.pathname.startsWith(sub.path + '/'));
+
           return (
-            <NavLink
-              key={link.path}
-              to={link.path}
-              className={({ isActive }) => `sidebar-link ${isActive ? 'active' : ''}`}
-              end={link.path === '/' || link.path === '/admin'}
-              title={!isExpanded && !isMobile ? link.label : undefined}
-            >
-              <Icon size={isExpanded ? 20 : 24} className="sidebar-link-icon" />
-              {isExpanded && <span className="fade-in text-sm font-medium">{link.label}</span>}
-            </NavLink>
+            <div key={link.path} className="sidebar-item-container">
+              {hasSublinks ? (
+                <div 
+                  className={`sidebar-link flex items-center justify-between cursor-pointer ${isChildActive ? 'active-parent' : ''}`}
+                  onClick={(e) => toggleSubmenu(link.path, e)}
+                  title={!isExpanded && !isMobile ? link.label : undefined}
+                >
+                  <div className="flex items-center gap-3">
+                    <Icon size={isExpanded ? 20 : 24} className={`sidebar-link-icon ${isChildActive ? 'text-primary' : ''}`} />
+                    {isExpanded && <span className="fade-in text-sm font-medium whitespace-nowrap">{link.label}</span>}
+                  </div>
+                  {isExpanded && (
+                    <div className="text-gray-400">
+                      {isSubmenuOpen ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
+                    </div>
+                  )}
+                </div>
+              ) : (
+                <NavLink
+                  to={link.path}
+                  className={({ isActive }) => `sidebar-link ${isActive ? 'active' : ''}`}
+                  end={link.path === '/' || link.path === '/admin'}
+                  title={!isExpanded && !isMobile ? link.label : undefined}
+                >
+                  <Icon size={isExpanded ? 20 : 24} className="sidebar-link-icon" />
+                  {isExpanded && <span className="fade-in text-sm font-medium whitespace-nowrap">{link.label}</span>}
+                </NavLink>
+              )}
+
+              {/* Submenu Dropdown */}
+              {hasSublinks && isSubmenuOpen && isExpanded && (
+                <div className="sidebar-submenu pl-9 pr-2 py-1 space-y-1 fade-in">
+                  {link.sublinks!.map(sub => {
+                    const SubIcon = sub.icon;
+                    return (
+                      <NavLink
+                        key={sub.path}
+                        to={sub.path}
+                        className={({ isActive }) => `sidebar-sublink flex items-center gap-3 px-3 py-2 rounded-lg text-sm transition-colors ${isActive ? 'bg-primary/10 text-primary font-medium' : 'text-gray-400 hover:text-white hover:bg-gray-800/50'}`}
+                        end={sub.path === '/admin/projects'} 
+                      >
+                        <SubIcon size={16} />
+                        <span>{sub.label}</span>
+                      </NavLink>
+                    );
+                  })}
+                </div>
+              )}
+            </div>
           );
         })}
       </nav>
