@@ -8,7 +8,7 @@ export const AdminProjects = () => {
   const [loading, setLoading] = useState(true);
   
   const [showModal, setShowModal] = useState(false);
-  const [newProject, setNewProject] = useState({ name: '', location: '', owner_id: '' });
+  const [newProject, setNewProject] = useState({ name: '', location: '', owner_ids: [] as string[] });
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   useEffect(() => {
@@ -19,7 +19,7 @@ export const AdminProjects = () => {
     try {
       setLoading(true);
       const [projectsRes, ownersRes] = await Promise.all([
-        supabase.from('properties').select('*, owner:profiles(*)').order('created_at', { ascending: false }),
+        supabase.from('properties').select('*, owners:profiles!property_owners(*)').order('created_at', { ascending: false }),
         supabase.from('profiles').select('*').eq('role', 'owner')
       ]);
 
@@ -39,23 +39,43 @@ export const AdminProjects = () => {
     e.preventDefault();
     try {
       setIsSubmitting(true);
-      const { error, data } = await supabase
+      
+      // 1. Insert Property
+      const { error: propError, data: propData } = await supabase
         .from('properties')
         .insert([{
           name: newProject.name,
-          location: newProject.location,
-          owner_id: newProject.owner_id || null
+          location: newProject.location
         }])
         .select();
 
-      if (error) {
-        console.error('Supabase raw error:', error);
-        throw error;
+      if (propError) {
+        console.error('Supabase raw error (property):', propError);
+        throw propError;
       }
       
-      console.log('Project created successfully:', data);
+      const newPropertyId = propData[0].id;
+
+      // 2. Insert property_owners links if any owners were selected
+      if (newProject.owner_ids.length > 0) {
+        const ownerLinks = newProject.owner_ids.map(id => ({
+          property_id: newPropertyId,
+          profile_id: id
+        }));
+
+        const { error: ownersError } = await supabase
+          .from('property_owners')
+          .insert(ownerLinks);
+
+        if (ownersError) {
+           console.error('Supabase raw error (property_owners):', ownersError);
+           throw ownersError;
+        }
+      }
+      
+      console.log('Project created successfully with multiple owners.');
       setShowModal(false);
-      setNewProject({ name: '', location: '', owner_id: '' });
+      setNewProject({ name: '', location: '', owner_ids: [] });
       fetchData(); // Refresh list
     } catch (err: any) {
       console.error('Error creating project:', err);
@@ -109,9 +129,11 @@ export const AdminProjects = () => {
                     <td className="py-4 px-4 font-medium text-white">{project.name}</td>
                     <td className="py-4 px-4 text-gray-400">{project.location || '-'}</td>
                     <td className="py-4 px-4">
-                      {project.owner ? (
-                        <div className="text-sm">
-                          <span className="text-white">{project.owner.full_name}</span>
+                      {project.owners && project.owners.length > 0 ? (
+                        <div className="flex flex-wrap gap-1">
+                          {project.owners.map((o: any) => (
+                            <span key={o.id} className="badge badge-neutral text-xs">{o.full_name}</span>
+                          ))}
                         </div>
                       ) : (
                         <span className="text-gray-500 italic">Unassigned</span>
@@ -130,43 +152,63 @@ export const AdminProjects = () => {
 
       {showModal && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50">
-          <div className="bg-[#18233B] rounded-xl border border-[rgba(255,255,255,0.08)] p-6 w-full max-w-md shadow-2xl">
-            <h2 className="text-xl font-bold mb-4">Create New Project</h2>
+          <div className="bg-[#18233B] rounded-xl border border-[rgba(255,255,255,0.08)] p-6 w-full max-w-2xl shadow-2xl max-h-[90vh] overflow-y-auto">
+            <h2 className="text-xl font-bold mb-6">Create New Project</h2>
             <form onSubmit={handleCreateProject}>
-              <div className="mb-4">
-                <label className="block text-sm font-medium text-gray-400 mb-1">Project Name</label>
-                <input 
-                  type="text" 
-                  required
-                  className="w-full bg-[#0B1220] border border-[rgba(255,255,255,0.15)] rounded-lg px-4 py-2 text-white outline-none focus:border-[#1F6F6B] transition-colors"
-                  value={newProject.name}
-                  onChange={e => setNewProject({...newProject, name: e.target.value})}
-                />
-              </div>
-              <div className="mb-4">
-                <label className="block text-sm font-medium text-gray-400 mb-1">Location</label>
-                <input 
-                  type="text" 
-                  className="w-full bg-[#0B1220] border border-[rgba(255,255,255,0.15)] rounded-lg px-4 py-2 text-white outline-none focus:border-[#1F6F6B] transition-colors"
-                  value={newProject.location}
-                  onChange={e => setNewProject({...newProject, location: e.target.value})}
-                />
-              </div>
-              <div className="mb-6">
-                <label className="block text-sm font-medium text-gray-400 mb-1">Assign to Owner</label>
-                <select 
-                  className="w-full bg-[#0B1220] border border-[rgba(255,255,255,0.15)] rounded-lg px-4 py-2 text-white outline-none focus:border-[#1F6F6B] transition-colors"
-                  value={newProject.owner_id}
-                  onChange={e => setNewProject({...newProject, owner_id: e.target.value})}
-                >
-                  <option value="">Unassigned</option>
-                  {owners.map(o => (
-                    <option key={o.id} value={o.id}>{o.full_name || o.id}</option>
-                  ))}
-                </select>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                <div>
+                  <div className="mb-4">
+                    <label className="block text-sm font-medium text-gray-400 mb-1">Project Name</label>
+                    <input 
+                      type="text" 
+                      required
+                      className="w-full bg-[#0B1220] border border-[rgba(255,255,255,0.15)] rounded-lg px-4 py-2 text-white outline-none focus:border-[#1F6F6B] transition-colors"
+                      value={newProject.name}
+                      onChange={e => setNewProject({...newProject, name: e.target.value})}
+                      placeholder="e.g. Villa Azure"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-400 mb-1">Location</label>
+                    <input 
+                      type="text" 
+                      className="w-full bg-[#0B1220] border border-[rgba(255,255,255,0.15)] rounded-lg px-4 py-2 text-white outline-none focus:border-[#1F6F6B] transition-colors"
+                      value={newProject.location}
+                      onChange={e => setNewProject({...newProject, location: e.target.value})}
+                      placeholder="e.g. Canggu, Bali"
+                    />
+                  </div>
+                </div>
+                
+                <div>
+                  <label className="block text-sm font-medium text-gray-400 mb-2">Assign Owners</label>
+                  <div className="bg-[#0B1220] border border-[rgba(255,255,255,0.15)] rounded-lg p-3 max-h-48 overflow-y-auto space-y-2">
+                    {owners.length === 0 ? (
+                      <p className="text-sm text-gray-500 italic">No owners available. Please add owners first.</p>
+                    ) : (
+                      owners.map(o => (
+                        <label key={o.id} className="flex items-center gap-3 p-2 hover:bg-white/5 rounded cursor-pointer transition-colors">
+                          <input 
+                            type="checkbox" 
+                            className="w-4 h-4 rounded border-gray-600 text-primary focus:ring-primary bg-[#18233B]"
+                            checked={newProject.owner_ids.includes(o.id)}
+                            onChange={(e) => {
+                              if (e.target.checked) {
+                                setNewProject({ ...newProject, owner_ids: [...newProject.owner_ids, o.id] });
+                              } else {
+                                setNewProject({ ...newProject, owner_ids: newProject.owner_ids.filter(id => id !== o.id) });
+                              }
+                            }}
+                          />
+                          <span className="text-sm text-white">{o.full_name || o.id}</span>
+                        </label>
+                      ))
+                    )}
+                  </div>
+                </div>
               </div>
               
-              <div className="flex justify-end gap-3">
+              <div className="flex justify-end gap-3 mt-8 pt-4 border-t border-gray-800">
                 <button 
                   type="button" 
                   onClick={() => setShowModal(false)}

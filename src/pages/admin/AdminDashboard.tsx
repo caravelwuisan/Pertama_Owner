@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 import { supabase } from '../../lib/supabase';
 import { Users, FolderOpen, FileText, Activity } from 'lucide-react';
 import './AdminDashboard.css';
@@ -103,7 +104,7 @@ export const AdminDashboard = () => {
         <div className="card">
           <div className="card-header flex justify-between items-center mb-6">
             <h3 className="card-title text-white">Recent Activity</h3>
-            <a href="/admin/updates" className="btn btn-secondary btn-sm">Manage</a>
+            <Link to="/admin/updates" className="btn btn-secondary btn-sm">Manage</Link>
           </div>
           <div className="activity-list">
             {recentUpdates.length === 0 ? <p className="text-gray-400 text-sm">No recent activity.</p> : recentUpdates.map(update => (
@@ -121,7 +122,7 @@ export const AdminDashboard = () => {
         <div className="card">
           <div className="card-header flex justify-between items-center mb-6">
             <h3 className="card-title text-white">Recent Projects</h3>
-            <a href="/admin/projects" className="btn btn-secondary btn-sm">Manage</a>
+            <Link to="/admin/projects" className="btn btn-secondary btn-sm">Manage</Link>
           </div>
           <div className="projects-list">
             {recentProjects.length === 0 ? <p className="text-gray-400 text-sm">No properties available.</p> : recentProjects.map(project => (

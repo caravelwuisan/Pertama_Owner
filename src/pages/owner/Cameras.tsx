@@ -12,12 +12,36 @@ export const Cameras = () => {
     const fetchCameras = async () => {
       try {
         setLoading(true);
-        // Step 1: get owner property
-        const { data: propData } = await supabase.from('properties').select('id').limit(1).maybeSingle();
+        // Step 1: get owner's property
+        const { data: propData } = await supabase.from('properties').select('*').limit(1).maybeSingle();
         if (propData) {
           // Step 2: get cameras for property
           const { data: camData } = await supabase.from('cameras').select('*').eq('property_id', propData.id);
-          setCameras(camData || []);
+          
+          if (camData && camData.length > 0) {
+            setCameras(camData);
+          } else {
+            // Generate fictitious cameras for the UI demo based on the property
+            const mockCameras = [
+              {
+                id: 'mock-cam-1',
+                property_id: propData.id,
+                name: `${propData.name || 'Site'} - Overview (Live)`,
+                status: 'online',
+                streamUrl: 'https://images.unsplash.com/photo-1541888081682-1ddccb1bf4bc?auto=format&fit=crop&q=80',
+                created_at: new Date().toISOString()
+              },
+              {
+                id: 'mock-cam-2',
+                property_id: propData.id,
+                name: `${propData.name || 'Site'} - Interior Sector A`,
+                status: 'online',
+                streamUrl: 'https://images.unsplash.com/photo-1504307651254-35680f356f12?auto=format&fit=crop&q=80',
+                created_at: new Date().toISOString()
+              }
+            ];
+            setCameras(mockCameras);
+          }
         }
       } catch (err) {
         console.error('Error fetching cameras:', err);
