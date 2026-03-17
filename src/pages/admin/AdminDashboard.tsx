@@ -34,7 +34,7 @@ export const AdminDashboard = () => {
         setRecentUpdates(recentUpds || []);
 
         // Recent Projects
-        const { data: recentProps } = await supabase.from('properties').select('*, owner:profiles(full_name)').order('created_at', { ascending: false }).limit(3);
+        const { data: recentProps } = await supabase.from('properties').select('*, property_owners(profiles(full_name))').order('created_at', { ascending: false }).limit(3);
         setRecentProjects(recentProps || []);
 
       } catch (err) {
@@ -134,7 +134,7 @@ export const AdminDashboard = () => {
                   {/* Hardcoded progress for now */}
                   <div className="progress-bar-fill bg-gold h-full" style={{ width: `65%` }}></div>
                 </div>
-                <p className="text-xs text-gray-500 mt-2">Owner: {project.owner?.full_name || 'Unassigned'}</p>
+                <p className="text-xs text-gray-500 mt-2">Owner: {project.property_owners?.[0]?.profiles?.full_name || 'Unassigned'}</p>
               </div>
             ))}
           </div>

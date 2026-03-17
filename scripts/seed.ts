@@ -51,7 +51,6 @@ async function seed() {
     if (ownerData.user) {
       const { data: propData, error: propError } = await supabase.from('properties').insert([
         {
-          owner_id: ownerData.user.id,
           name: 'Gravity StayFlow Villa',
           location: 'Bali, Indonesia',
           image_url: 'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=800&auto=format&fit=crop',
@@ -60,8 +59,16 @@ async function seed() {
 
       if (propError) {
         console.error('Error creating property:', propError.message);
-      } else {
-        console.log('Created property for owner:', propData.name);
+      } else if (propData) {
+        // Link owner to property
+        const { error: linkError } = await supabase.from('property_owners').insert([
+          { property_id: propData.id, profile_id: ownerData.user.id }
+        ]);
+        if (linkError) {
+          console.error('Error linking property owner:', linkError.message);
+        } else {
+          console.log('Created and linked property for owner:', propData.name);
+        }
       }
     }
   }

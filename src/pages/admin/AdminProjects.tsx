@@ -19,14 +19,19 @@ export const AdminProjects = () => {
     try {
       setLoading(true);
       const [projectsRes, ownersRes] = await Promise.all([
-        supabase.from('properties').select('*, owners:profiles!property_owners(*)').order('created_at', { ascending: false }),
+        supabase.from('properties').select('*, property_owners(profiles(*))').order('created_at', { ascending: false }),
         supabase.from('profiles').select('*').eq('role', 'owner')
       ]);
 
       if (projectsRes.error) throw projectsRes.error;
       if (ownersRes.error) throw ownersRes.error;
 
-      setProjects(projectsRes.data || []);
+      const mappedProjects = projectsRes.data?.map((p: any) => ({
+        ...p,
+        owners: p.property_owners?.map((po: any) => po.profiles) || []
+      })) || [];
+
+      setProjects(mappedProjects || []);
       setOwners(ownersRes.data || []);
     } catch (err) {
       console.error('Error fetching data:', err);
