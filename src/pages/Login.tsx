@@ -56,7 +56,7 @@ export const Login: React.FC = () => {
       <div className="login-card">
         <div className="login-header">
           <div className="login-logo">
-            <div className="logo-icon blur-glow"></div>
+            <img src="/logo.jpg" alt="Pertama Property" className="login-logo-image" />
           </div>
           <h1>Welcome Back</h1>
           <p>Please enter your details to sign in</p>
