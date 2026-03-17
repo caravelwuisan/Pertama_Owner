@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import { Layout } from './components/layout/Layout';
 import { AuthProvider, useAuth } from './contexts/AuthContext';
 
@@ -22,6 +22,7 @@ const AdminCameras = () => <div className="p-8 text-center text-secondary">Camer
 
 const ProtectedRoute = ({ allowedRoles }: { allowedRoles?: ('admin' | 'owner')[] }) => {
   const { user, role, loading } = useAuth();
+  const location = useLocation();
 
   if (loading) {
     return (
@@ -32,7 +33,10 @@ const ProtectedRoute = ({ allowedRoles }: { allowedRoles?: ('admin' | 'owner')[]
   }
 
   if (!user) {
-    return <Navigate to="/login" replace />;
+    // Redirect to the login page, but save the current location they were
+    // trying to go to when they were redirected. This allows us to send them
+    // along to that page after they login, which is a nicer user experience.
+    return <Navigate to="/login" state={{ from: location }} replace />;
   }
 
   if (allowedRoles && role && !allowedRoles.includes(role)) {

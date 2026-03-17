@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { supabase } from '../lib/supabase';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
+import { useAuth } from '../contexts/AuthContext';
 
 import { KeyRound, Mail, AlertCircle } from 'lucide-react';
 import './Login.css';
@@ -10,14 +11,26 @@ export const Login: React.FC = () => {
   const [password, setPassword] = useState('');
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+  
   const navigate = useNavigate();
+  const location = useLocation();
+  const { user, role } = useAuth();
+
+  const from = location.state?.from?.pathname || (role === 'admin' ? '/admin' : '/');
+
+  useEffect(() => {
+    // If user is already logged in, redirect them away from the login page
+    if (user) {
+      navigate(from, { replace: true });
+    }
+  }, [user, navigate, from]);
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
     setError(null);
 
-    const { error } = await supabase.auth.signInWithPassword({
+    const { data, error } = await supabase.auth.signInWithPassword({
       email,
       password,
     });
@@ -26,7 +39,15 @@ export const Login: React.FC = () => {
       setError(error.message);
       setLoading(false);
     } else {
-      navigate('/');
+      // Determine default route based on role if no specific destination was requested
+      if (!location.state?.from?.pathname) {
+          // We need to fetch the role first since the AuthContext takes a moment to update
+          const { data: profile } = await supabase.from('profiles').select('role').eq('id', data.user.id).single();
+          const route = profile?.role === 'admin' ? '/admin' : '/';
+          navigate(route, { replace: true });
+      } else {
+          navigate(from, { replace: true });
+      }
     }
   };
 
