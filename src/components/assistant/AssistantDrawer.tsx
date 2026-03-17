@@ -131,7 +131,7 @@ export const AssistantDrawer: React.FC<AssistantDrawerProps> = ({ isOpen, onClos
       const { data: session } = await supabase.auth.getSession();
       
       const response = await fetch(
-        `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/assistant`,
+        '/api/assistant',
         {
           method: 'POST',
           headers: {
@@ -151,9 +151,9 @@ export const AssistantDrawer: React.FC<AssistantDrawerProps> = ({ isOpen, onClos
       
       speakText(assistantMsg);
       
-    } catch (err) {
+    } catch (err: any) {
       console.error(err);
-      setMessages(prev => [...prev, { id: Date.now().toString(), role: 'system', content: "Sorry, I encountered an error connecting to my servers. Please try again later." }]);
+      setMessages(prev => [...prev, { id: Date.now().toString(), role: 'system', content: `SERVER ERROR: ${err.message || 'Unknown error occurred.'}` }]);
     } finally {
       setIsLoading(false);
     }

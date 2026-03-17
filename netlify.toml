@@ -1,0 +1,10 @@
+[[redirects]]
+from = "/api/*"
+to = "/.netlify/functions/:splat"
+status = 200
+
+# Fallback block for React Router in a Single Page App
+[[redirects]]
+from = "/*"
+to = "/index.html"
+status = 200
