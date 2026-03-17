@@ -9,6 +9,7 @@ interface SidebarProps {
   isMobile?: boolean;
   isMobileOpen?: boolean;
   toggleSidebar: () => void;
+  toggleAssistant: () => void;
 }
 
 type NavLinkItem = {
@@ -43,7 +44,7 @@ const adminLinks: NavLinkItem[] = [
   { path: '/admin/owners', label: 'Owners', icon: Users },
 ];
 
-export const Sidebar: React.FC<SidebarProps> = ({ role, isExpanded, isMobile, isMobileOpen, toggleSidebar }) => {
+export const Sidebar: React.FC<SidebarProps> = ({ role, isExpanded, isMobile, isMobileOpen, toggleSidebar, toggleAssistant }) => {
   const links = role === 'admin' ? adminLinks : ownerLinks;
   const location = useLocation();
   const [expandedMenu, setExpandedMenu] = useState<string | null>('/admin/projects'); // default open for admin projects or null
@@ -148,7 +149,12 @@ export const Sidebar: React.FC<SidebarProps> = ({ role, isExpanded, isMobile, is
       <div className="sidebar-footer">
         {/* Chat Bot Area */}
         <div className={`chatbot-area ${isExpanded ? 'p-4' : 'p-2 flex justify-center'} transition-all`}>
-          <button className={`chatbot-btn w-full gap-2 text-sm font-medium transition-colors ${isExpanded ? 'flex items-center px-4 py-3 bg-gray-50 border border-gray-200 text-gray-700 hover:bg-gray-100 rounded-lg' : 'p-2 rounded-lg bg-gray-50 border border-gray-200 hover:bg-gray-100'}`} title={!isExpanded && !isMobile ? "Ask ChatBot" : undefined}>
+          <button 
+            type="button"
+            onClick={toggleAssistant}
+            className={`chatbot-btn w-full gap-2 text-sm font-medium transition-colors ${isExpanded ? 'flex items-center px-4 py-3 bg-gray-50 border border-gray-200 text-gray-700 hover:bg-gray-100 rounded-lg' : 'p-2 rounded-lg bg-gray-50 border border-gray-200 hover:bg-gray-100'}`} 
+            title={!isExpanded && !isMobile ? "Ask ChatBot" : undefined}
+          >
             <MessageSquare size={isExpanded ? 18 : 22} className="text-gray-600" />
             {isExpanded && <span className="fade-in">Ask Assistant</span>}
           </button>

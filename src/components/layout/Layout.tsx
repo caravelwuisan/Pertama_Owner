@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Outlet, useLocation } from 'react-router-dom';
 import { Sidebar } from './Sidebar';
 import { Header } from './Header';
+import { AssistantDrawer } from '../assistant/AssistantDrawer';
 import './Layout.css';
 import { useAuth } from '../../contexts/AuthContext';
 
@@ -9,6 +10,7 @@ export const Layout: React.FC = () => {
   const { user, profile } = useAuth();
   const [isSidebarExpanded, setIsSidebarExpanded] = useState(true);
   const [isMobileOpen, setIsMobileOpen] = useState(false);
+  const [isAssistantOpen, setIsAssistantOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
   const location = useLocation();
 
@@ -55,6 +57,7 @@ export const Layout: React.FC = () => {
         isMobile={isMobile}
         isMobileOpen={isMobileOpen}
         toggleSidebar={toggleSidebar} 
+        toggleAssistant={() => setIsAssistantOpen(true)}
       />
       
       {/* Mobile backdrop for off-canvas menu */}
@@ -68,6 +71,11 @@ export const Layout: React.FC = () => {
           <Outlet />
         </main>
       </div>
+
+      <AssistantDrawer 
+        isOpen={isAssistantOpen} 
+        onClose={() => setIsAssistantOpen(false)} 
+      />
     </div>
   );
 };
