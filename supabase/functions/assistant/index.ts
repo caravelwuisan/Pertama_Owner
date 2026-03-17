@@ -116,7 +116,7 @@ ${contextText}`;
         Authorization: `Bearer ${openAiKey}`,
       },
       body: JSON.stringify({
-        model: "gpt-4o",
+        model: "gpt-4o-mini",
         messages: chatMessages,
         temperature: 0.7,
       }),
